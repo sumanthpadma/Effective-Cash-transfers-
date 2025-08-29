@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telangana MCH Kit G2P Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header */
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Main Content */
+        .main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card Components */
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .kpi-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Pipeline Diagram */
+        .pipeline {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .pipeline-flow {
+            display: flex;
+            align-items: center;
+            min-width: 1000px;
+            gap: 1rem;
+        }
+
+        .pipeline-node {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            background: #e3f2fd;
+            border-radius: 8px;
+            border: 2px solid #bbdefb;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pipeline-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .pipeline-node.credit-instruction {
+            background: #fff3e0;
+            border-color: #ffcc02;
+            position: relative;
+        }
+
+        .pipeline-node.credit-instruction::after {
+            content: "Credit Instruction";
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff9800;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .pipeline-arrow {
+            width: 30px;
+            height: 2px;
+            background: #666;
+            position: relative;
+        }
+
+        .pipeline-arrow::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: -3px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid #666;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
+
+        /* Table */
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-warning { background: #fff3cd; color: #856404; }
+        .badge-danger { background: #f8d7da; color: #721c24; }
+        .badge-info { background: #d1ecf1; color: #0c5460; }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #dee2e6;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            border-left: 4px solid #28a745;
+        }
+
+        .timeline-item.due { border-left-color: #ffc107; }
+        .timeline-item.held { border-left-color: #dc3545; }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 1rem;
+            width: 12px;
+            height: 12px;
+            background: #28a745;
+            border-radius: 50%;
+        }
+
+        .timeline-item.due::before { background: #ffc107; }
+        .timeline-item.held::before { background: #dc3545; }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+
+        .btn:hover { background: #0056b3; }
+        .btn-success { background: #28a745; }
+        .btn-success:hover { background: #1e7e34; }
+        .btn-warning { background: #ffc107; color: #212529; }
+        .btn-warning:hover { background: #e0a800; }
+        .btn-danger { background: #dc3545; }
+        .btn-danger:hover { background: #c82333; }
+        .btn-sm { padding: 0.5rem 1rem; font-size: 0.9rem; }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        /* Alert Banner */
+        .alert {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 0.5rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .pipeline-flow {
+                flex-direction: column;
+                min-width: auto;
+            }
+
+            .pipeline-arrow {
+                transform: rotate(90deg);
+                margin: 0.5rem 0;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            th, td {
+                padding: 0.5rem;
+            }
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        button:focus, input:focus, select:focus {
+            outline: 2px solid #007bff;
+            outline-offset: 2px;
+        }
+
+        /* Custom utility classes */
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .mt-2 { margin-top: 1rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .flex { display: flex; }
+        .flex-between { justify-content: space-between; }
+        .flex-center { align-items: center; }
+        .gap-1 { gap: 0.5rem; }
+        .gap-2 { gap: 1rem; }
+        .w-full { width: 100%; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Telangana MCH Kit G2P</div>
+                <nav class="nav" role="navigation">
+                    <button class="nav-btn active" data-screen="dashboard" aria-label="Dashboard">Dashboard</button>
+                    <button class="nav-btn" data-screen="beneficiaries" aria-label="Beneficiaries">Beneficiaries</button>
+                    <button class="nav-btn" data-screen="profile" aria-label="Profile" style="display:none">Profile</button>
+                    <button class="nav-btn" data-screen="payments" aria-label="Payments">Payments</button>
+                    <button class="nav-btn" data-screen="ai-review" aria-label="AI Review">AI Review</button>
+                    <button class="nav-btn" data-screen="disaster" aria-label="Disaster">Disaster</button>
+                    <button class="nav-btn" data-screen="settings" aria-label="Settings">Settings</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <!-- Dashboard Screen -->
+            <div id="dashboard" class="screen active">
+                <div class="alert alert-warning">
+                    <strong>Migration Alert:</strong> 1,247 beneficiaries affected by floods in Khammam district. 
+                    <a href="#" onclick="showScreen('disaster')">Review disaster response →</a>
+                </div>
+                
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <span class="kpi-value" id="kpi-eligible">0</span>
+                        <span class="kpi-label">Eligible Beneficiaries</span>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-value" id="kpi-ineligible">0</span>
+                        <span class="kpi-label">Ineligible</span>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-value" id="kpi-held">0</span>
+                        <span class="kpi-label">Payments Held</span>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-value" id="kpi-disbursed">₹0</span>
+                        <span class="kpi-label">Total Disbursed</span>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-value" id="kpi-credit-instructions">0%</span>
+                        <span class="kpi-label">Credit Instructions Issued</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Payment Pipeline Overview</div>
+                    <div class="pipeline">
+                        <div class="pipeline-flow">
+                            <div class="pipeline-node">
+                                <strong>Govt Dept</strong><br>
+                                <small>MCH Scheme</small>
+                            </div>
+                            <div class="pipeline-arrow"></div>
+                            <div class="pipeline-node">
+                                <strong>PFMS/Treasury</strong><br>
+                                <small>Budget Allocation</small>
+                            </div>
+                            <div class="pipeline-arrow"></div>
+                            <div class="pipeline-node">
+                                <strong>Remitter Bank</strong><br>
+                                <small>Transaction Init</small>
+                            </div>
+                            <div class="pipeline-arrow"></div>
+                            <div class="pipeline-node credit-instruction">
+                                <strong>NPCI Switch</strong><br>
+                                <small>Processing</small>
+                            </div>
+                            <div class="pipeline-arrow"></div>
+                            <div class="pipeline-node">
+                                <strong>Beneficiary Bank</strong><br>
+                                <small>Account Credit</small>
+                            </div>
+                            <div class="pipeline-arrow"></div>
+                            <div class="pipeline-node">
+                                <strong>Settlement</strong><br>
+                                <small id="settlement-mode">RTGS</small>
+                            </div>
+                            <div class="pipeline-arrow"></div>
+                            <div class="pipeline-node">
+                                <strong>Beneficiary</strong><br>
+                                <small>Funds Received</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">AI-Assisted Layer</div>
+                    <div class="flex gap-2" style="flex-wrap: wrap;">
+                        <div class="badge badge-info">Dynamic Verification: Active</div>
+                        <div class="badge badge-warning">Geospatial Flags: 3 Districts</div>
+                        <div class="badge badge-success">Predictive Nudges: Enabled</div>
+                        <div class="badge badge-info">Fraud Detection: Running</div>
+                        <div class="badge badge-success">ANM/ASHA Helper: Online</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Beneficiaries Screen -->
+            <div id="beneficiaries" class="screen">
+                <div class="card">
+                    <div class="card-header">Beneficiary Management</div>
+                    
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label for="district-filter">District</label>
+                            <select id="district-filter">
+                                <option value="">All Districts</option>
+                                <option value="Hyderabad">Hyderabad</option>
+                                <option value="Warangal">Warangal</option>
+                                <option value="Khammam">Khammam</option>
+                                <option value="Nizamabad">Nizamabad</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="eligibility-filter">Eligibility</label>
+                            <select id="eligibility-filter">
+                                <option value="">All</option>
+                                <option value="eligible">Eligible</option>
+                                <option value="ineligible">Ineligible</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="risk-filter">Risk Level</label>
+                            <select id="risk-filter">
+                                <option value="">All</option>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Aadhaar</th>
+                                    <th>District</th>
+                                    <th>Status</th>
+                                    <th>Risk</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="beneficiaries-table">
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Screen -->
+            <div id="profile" class="screen">
+                <div class="card">
+                    <div class="card-header">Beneficiary Profile</div>
+                    <div id="profile-details">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">Payment Timeline</div>
+                    <div id="payment-timeline" class="timeline">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Latest Payment Path</div>
+                    <div id="latest-payment-path">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payments Screen -->
+            <div id="payments" class="screen">
+                <div class="card">
+                    <div class="card-header">Interactive Payment Pipeline</div>
+                    <p class="mb-2">Click on any node to highlight the payment path</p>
+                    
+                    <div class="pipeline">
+                        <div class="pipeline-flow" id="interactive-pipeline">
+                            <div class="pipeline-node" data-step="govt">
+                                <strong>Govt Dept</strong><br>
+                                <small>MCH Scheme</small>
+                            </div>
+                            <div class="pipeline-arrow"></div>
+                            <div class="pipeline-node" data-step="pfms">
+                                <strong>PFMS/Treasury</strong><br>
+                                <small>Budget Allocation</small>
+                            </div>
+                            <div class="pipeline-arrow"></div>
+                            <div class="pipeline-node" data-step="remitter">
+                                <strong>Remitter Bank</strong><br>
+                                <small>Transaction Init</small>
+                            </div>
+                            <div class="pipeline-arrow"></div>
+                            <div class="pipeline-node credit-instruction" data-step="npci">
+                                <strong>NPCI Switch</strong><br>
+                                <small>Processing</small>
+                            </div>
+                            <div class="pipeline-arrow"></div>
+                            <div class="pipeline-node" data-step="beneficiary-bank">
+                                <strong>Beneficiary Bank</strong><br>
+                                <small>Account Credit</small>
+                            </div>
+                            <div class="pipeline-arrow"></div>
+                            <div class="pipeline-node" data-step="settlement">
+                                <strong>Settlement</strong><br>
+                                <small id="settlement-mode-payments">RTGS</small>
+                            </div>
+                            <div class="pipeline-arrow"></div>
+                            <div class="pipeline-node" data-step="beneficiary">
+                                <strong>Beneficiary</strong><br>
+                                <small>Funds Received</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-2">
+                        <div class="card-header">Recent Transactions</div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Beneficiary</th>
+                                        <th>Stage</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Credit Instruction</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="payments-table">
+                                    <!-- Populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Review Screen -->
+            <div id="ai-review" class="screen">
+                <div class="card">
+                    <div class="card-header">AI Fraud Detection Queue</div>
+                    
+                    <div class="alert alert-info mb-2">
+                        <strong>AI Fraud Check:</strong> Running parallel to NPCI processing with behavior, transaction, and identity analysis.
+                    </div>
+
+                    <div id="fraud-queue">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Disaster Screen -->
+            <div id="disaster" class="screen">
+                <div class="card">
+                    <div class="card-header">Disaster Response Management</div>
+                    
+                    <div class="alert alert-warning">
+                        <strong>Active Disaster:</strong> Flooding in Khammam district has displaced 1,247 beneficiaries.
+                    </div>
+
+                    <div class="flex flex-between flex-center mb-2">
+                        <h3>Affected Beneficiaries</h3>
+                        <button class="btn btn-warning" onclick="fastTrackDisaster()">
+                            Fast-track Due DBT (Bulk Action)
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Original District</th>
+                                    <th>Current Location</th>
+                                    <th>Due Amount</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="disaster-table">
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Screen -->
+            <div id="settings" class="screen">
+                <div class="card">
+                    <div class="card-header">System Configuration</div>
+                    
+                    <div class="form-group">
+                        <label for="anc-amount">ANC Stage Amount (₹)</label>
+                        <input type="number" id="anc-amount" value="3000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="delivery-boy-amount">Delivery Boy Amount (₹)</label>
+                        <input type="number" id="delivery-boy-amount" value="4000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="delivery-girl-amount">Delivery Girl Amount (₹)</label>
+                        <input type="number" id="delivery-girl-amount" value="5000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="immunisation1-amount">Immunisation 1 (3 mo) Amount (₹)</label>
+                        <input type="number" id="immunisation1-amount" value="2000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="immunisation2-amount">Immunisation 2 (9 mo) Amount (₹)</label>
+                        <input type="number" id="immunisation2-amount" value="3000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="settlement-mode">Settlement Mode</label>
+                        <select id="settlement-mode-setting">
+                            <option value="RTGS">RTGS (Today)</option>
+                            <option value="CBDC">CBDC (Future)</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-success" onclick="saveSettings()">Save Settings</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Eligibility Constraints</div>
+                    <div class="alert alert-info">
+                        <strong>Current Rules:</strong>
+                        <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                            <li>Must be Telangana resident</li>
+                            <li>Aadhaar-linked bank account required</li>
+                            <li>Delivery in government hospital</li>
+                            <li>Maximum 2 deliveries allowed</li>
+                            <li>Not more than 2 surviving children</li>
+                        </ul>
+                        <p style="margin-top: 1rem;"><strong>Note:</strong> Breaking any constraint will pause or stop future payments.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Nudge Modal -->
+    <div id="nudge-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Send Nudge</h3>
+                <button class="close" onclick="closeModal('nudge-modal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="nudge-type">Nudge Type</label>
+                <select id="nudge-type">
+                    <option value="sms">SMS</option>
+                    <option value="ivr">IVR Call</option>
+                    <option value="whatsapp">WhatsApp</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="nudge-template">Message Template</label>
+                <select id="nudge-template">
+                    <option value="document-upload">Document Upload Required</option>
+                    <option value="bank-verification">Bank Account Verification</option>
+                    <option value="hospital-visit">Hospital Visit Reminder</option>
+                    <option value="immunization">Immunization Due</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="nudge-message">Message Preview</label>
+                <textarea id="nudge-message" rows="4" readonly></textarea>
+            </div>
+            <button class="btn btn-success" onclick="sendNudge()">Send Nudge</button>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
