@@ -438,6 +438,258 @@
             }
         }
 
+        /* Orchestration Pipeline - Three Swimlanes */
+        .orchestration-pipeline {
+            display: grid;
+            grid-template-rows: auto auto auto;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .swimlane {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            border-left: 4px solid #007bff;
+        }
+
+        .swimlane.authorization { border-left-color: #28a745; }
+        .swimlane.instruction { border-left-color: #ffc107; }
+        .swimlane.settlement { border-left-color: #dc3545; }
+
+        .swimlane-header {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .swimlane-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .pipeline-step {
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 6px;
+            border: 2px solid #e9ecef;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .pipeline-step.active {
+            border-color: #007bff;
+            background: #e3f2fd;
+            transform: scale(1.02);
+        }
+
+        .pipeline-step.highlighted {
+            border-color: #ff9800;
+            background: #fff3e0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 152, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0); }
+        }
+
+        .step-arrow {
+            width: 20px;
+            height: 2px;
+            background: #666;
+            position: relative;
+        }
+
+        .step-arrow::after {
+            content: '';
+            position: absolute;
+            right: -4px;
+            top: -2px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid #666;
+            border-top: 3px solid transparent;
+            border-bottom: 3px solid transparent;
+        }
+
+        /* Connector Status */
+        .connector-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .connector-status.enabled {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .connector-status.disabled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .connector-status.down {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* Send Form Styles */
+        .send-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .quote-display {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .route-selection {
+            margin-top: 1rem;
+        }
+
+        .route-option {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .route-option:hover {
+            border-color: #007bff;
+        }
+
+        .route-option.selected {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+
+        .route-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .route-details {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        /* Drawer Styles */
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            transition: right 0.3s ease;
+            z-index: 1001;
+            overflow-y: auto;
+        }
+
+        .drawer.open {
+            right: 0;
+        }
+
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+        }
+
+        .drawer-overlay.active {
+            display: block;
+        }
+
+        .drawer-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .drawer-content {
+            padding: 1.5rem;
+        }
+
+        /* KYC Status Indicators */
+        .kyc-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .kyc-status.verified {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .kyc-status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .kyc-status.failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Compliance Flags */
+        .compliance-flags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .compliance-flag {
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            background: #dc3545;
+            color: white;
+        }
+
+        .compliance-flag.high-risk {
+            background: #ffc107;
+            color: #212529;
+        }
+
         /* Accessibility */
         .sr-only {
             position: absolute;
@@ -476,9 +728,11 @@
                 <div class="logo">Telangana MCH Kit G2P</div>
                 <nav class="nav" role="navigation">
                     <button class="nav-btn active" data-screen="dashboard" aria-label="Dashboard">Dashboard</button>
+                    <button class="nav-btn" data-screen="send" aria-label="Send Payment">Send</button>
                     <button class="nav-btn" data-screen="beneficiaries" aria-label="Beneficiaries">Beneficiaries</button>
                     <button class="nav-btn" data-screen="profile" aria-label="Profile" style="display:none">Profile</button>
                     <button class="nav-btn" data-screen="payments" aria-label="Payments">Payments</button>
+                    <button class="nav-btn" data-screen="reconciliation" aria-label="Reconciliation">Reconciliation</button>
                     <button class="nav-btn" data-screen="ai-review" aria-label="AI Review">AI Review</button>
                     <button class="nav-btn" data-screen="disaster" aria-label="Disaster">Disaster</button>
                     <button class="nav-btn" data-screen="settings" aria-label="Settings">Settings</button>
@@ -573,10 +827,152 @@
                 </div>
             </div>
 
+            <!-- Send Screen -->
+            <div id="send" class="screen">
+                <div class="card">
+                    <div class="card-header">Send Payment</div>
+                    
+                    <div class="send-form">
+                        <div>
+                            <div class="form-group">
+                                <label for="send-beneficiary">Select Beneficiary</label>
+                                <select id="send-beneficiary">
+                                    <option value="">Choose beneficiary...</option>
+                                    <!-- Populated by JavaScript -->
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="send-amount">Amount</label>
+                                <input type="number" id="send-amount" placeholder="0.00">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="send-currency">Currency</label>
+                                <select id="send-currency">
+                                    <option value="INR">INR</option>
+                                    <option value="USD">USD</option>
+                                    <option value="EUR">EUR</option>
+                                    <option value="GBP">GBP</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="send-purpose">Purpose</label>
+                                <select id="send-purpose">
+                                    <option value="ANC">ANC Payment</option>
+                                    <option value="Delivery">Delivery Payment</option>
+                                    <option value="Immunisation 1">Immunisation 1</option>
+                                    <option value="Immunisation 2">Immunisation 2</option>
+                                </select>
+                            </div>
+
+                            <button class="btn btn-success" onclick="calculateQuote()" id="calculate-quote-btn">
+                                Calculate Quote
+                            </button>
+                        </div>
+                        
+                        <div>
+                            <div id="beneficiary-info" class="card" style="display: none;">
+                                <div class="card-header">Beneficiary Details</div>
+                                <div id="beneficiary-details"></div>
+                            </div>
+                            
+                            <div id="quote-results" style="display: none;">
+                                <div class="quote-display">
+                                    <h4>Quote & Route Selection</h4>
+                                    <div id="fx-calculation"></div>
+                                    <div id="route-options" class="route-selection"></div>
+                                </div>
+                                
+                                <button class="btn btn-success mt-2" onclick="initiateTransfer()" id="send-payment-btn" disabled>
+                                    Send Payment
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="orchestration-pipeline" class="card" style="display: none;">
+                    <div class="card-header">Payment Orchestration Pipeline</div>
+                    <div class="orchestration-pipeline">
+                        <div class="swimlane authorization">
+                            <div class="swimlane-header">Authorization</div>
+                            <div class="swimlane-content">
+                                <div class="pipeline-step" id="auth-risk">
+                                    <strong>Risk Check</strong><br>
+                                    <small>Compliance Screening</small>
+                                </div>
+                                <div class="step-arrow"></div>
+                                <div class="pipeline-step" id="auth-method">
+                                    <strong>Auth Method</strong><br>
+                                    <small>SCA/3DS/PIN</small>
+                                </div>
+                                <div class="step-arrow"></div>
+                                <div class="pipeline-step" id="auth-complete">
+                                    <strong>Authorized</strong><br>
+                                    <small>Ready to Process</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="swimlane instruction">
+                            <div class="swimlane-header">Credit/Payout Instruction</div>
+                            <div class="swimlane-content">
+                                <div class="pipeline-step" id="route-select">
+                                    <strong>Route Selection</strong><br>
+                                    <small>Connector Choice</small>
+                                </div>
+                                <div class="step-arrow"></div>
+                                <div class="pipeline-step highlighted" id="credit-instruction">
+                                    <strong>CREDIT INSTRUCTION</strong><br>
+                                    <small>Gateway → Institution</small>
+                                </div>
+                                <div class="step-arrow"></div>
+                                <div class="pipeline-step" id="payout-confirm">
+                                    <strong>Payout Request</strong><br>
+                                    <small>Institution Processing</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="swimlane settlement">
+                            <div class="swimlane-header">Settlement & Confirmation</div>
+                            <div class="swimlane-content">
+                                <div class="pipeline-step" id="settlement-process">
+                                    <strong>Settlement</strong><br>
+                                    <small id="settlement-time">Instant/T+1</small>
+                                </div>
+                                <div class="step-arrow"></div>
+                                <div class="pipeline-step" id="settlement-confirm">
+                                    <strong>Confirmed</strong><br>
+                                    <small>Settlement Complete</small>
+                                </div>
+                                <div class="step-arrow"></div>
+                                <div class="pipeline-step" id="final-status">
+                                    <strong>PAID</strong><br>
+                                    <small>Transfer Complete</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="transfer-events" class="mt-2">
+                        <h4>Transfer Events</h4>
+                        <div id="event-log"></div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Beneficiaries Screen -->
             <div id="beneficiaries" class="screen">
                 <div class="card">
-                    <div class="card-header">Beneficiary Management</div>
+                    <div class="card-header flex flex-between flex-center">
+                        <span>Beneficiary Management</span>
+                        <button class="btn btn-success" onclick="openBeneficiaryDrawer()">
+                            + Register New Beneficiary
+                        </button>
+                    </div>
                     
                     <div class="filters">
                         <div class="filter-group">
@@ -615,8 +1011,10 @@
                                     <th>Name</th>
                                     <th>Aadhaar</th>
                                     <th>District</th>
-                                    <th>Status</th>
+                                    <th>KYC Status</th>
+                                    <th>Eligibility</th>
                                     <th>Risk</th>
+                                    <th>Compliance</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -720,6 +1118,36 @@
                 </div>
             </div>
 
+            <!-- Reconciliation Screen -->
+            <div id="reconciliation" class="screen">
+                <div class="card">
+                    <div class="card-header">Payment Reconciliation</div>
+                    
+                    <div class="alert alert-info">
+                        <strong>Reconciliation Status:</strong> 3 mismatches detected in today's transactions.
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Transfer ID</th>
+                                    <th>Expected Amount</th>
+                                    <th>Actual Amount</th>
+                                    <th>Difference</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reconciliation-table">
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <!-- AI Review Screen -->
             <div id="ai-review" class="screen">
                 <div class="card">
@@ -773,6 +1201,14 @@
 
             <!-- Settings Screen -->
             <div id="settings" class="screen">
+                <div class="card">
+                    <div class="card-header">Connector Management</div>
+                    
+                    <div id="connectors-list">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+                
                 <div class="card">
                     <div class="card-header">System Configuration</div>
                     
@@ -829,6 +1265,98 @@
             </div>
         </div>
     </main>
+
+    <!-- Beneficiary Registration Drawer -->
+    <div class="drawer-overlay" id="beneficiary-drawer-overlay"></div>
+    <div class="drawer" id="beneficiary-drawer">
+        <div class="drawer-header">
+            <h3>Register New Beneficiary</h3>
+            <button class="close" onclick="closeBeneficiaryDrawer()">&times;</button>
+        </div>
+        <div class="drawer-content">
+            <div class="form-group">
+                <label for="beneficiary-type">Type</label>
+                <select id="beneficiary-type">
+                    <option value="PERSON">Person</option>
+                    <option value="BUSINESS">Business</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="beneficiary-full-name">Full Name</label>
+                <input type="text" id="beneficiary-full-name" placeholder="Enter full name">
+            </div>
+            
+            <div class="form-group">
+                <label for="beneficiary-country">Country</label>
+                <select id="beneficiary-country">
+                    <option value="IN">India</option>
+                    <option value="US">United States</option>
+                    <option value="GB">United Kingdom</option>
+                    <option value="EU">European Union</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="beneficiary-currency">Currency</label>
+                <select id="beneficiary-currency">
+                    <option value="INR">INR</option>
+                    <option value="USD">USD</option>
+                    <option value="GBP">GBP</option>
+                    <option value="EUR">EUR</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="payout-method-type">Payout Method</label>
+                <select id="payout-method-type" onchange="updatePayoutFields()">
+                    <option value="">Select payout method...</option>
+                    <option value="BANK">Bank Account</option>
+                    <option value="UPI">UPI ID</option>
+                    <option value="WALLET">Mobile Wallet</option>
+                    <option value="CARD">Debit Card</option>
+                    <option value="MPESA">M-Pesa</option>
+                </select>
+            </div>
+            
+            <div id="payout-fields">
+                <!-- Dynamically populated based on payout method -->
+            </div>
+            
+            <div class="form-group">
+                <label for="beneficiary-kyc">KYC Status</label>
+                <select id="beneficiary-kyc">
+                    <option value="PENDING">Pending</option>
+                    <option value="VERIFIED">Verified</option>
+                    <option value="FAILED">Failed</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="beneficiary-risk-score">Risk Score (0-1)</label>
+                <input type="number" id="beneficiary-risk-score" min="0" max="1" step="0.01" value="0.1">
+            </div>
+            
+            <div class="form-group">
+                <label>Risk Flags</label>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    <label style="display: flex; align-items: center; gap: 0.25rem;">
+                        <input type="checkbox" value="HIGH_RISK"> High Risk
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.25rem;">
+                        <input type="checkbox" value="PEP_MATCH"> PEP Match
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.25rem;">
+                        <input type="checkbox" value="SANCTIONS_HIT"> Sanctions Hit
+                    </label>
+                </div>
+            </div>
+            
+            <button class="btn btn-success w-full" onclick="saveBeneficiary()">
+                Register Beneficiary
+            </button>
+        </div>
+    </div>
 
     <!-- Nudge Modal -->
     <div id="nudge-modal" class="modal">
